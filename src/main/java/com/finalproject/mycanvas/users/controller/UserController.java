@@ -82,4 +82,28 @@ public class UserController {
         return ResponseEntity.ok(announcements);
     }
 
+    @PostMapping("/users/{id}/courses")
+    public ResponseEntity addCourse(@PathVariable Long id,
+                                    @RequestBody Course course) {
+        ResponseEntity responseEntity = userService.addCourse(id, course);
+
+        return ResponseEntity.ok(responseEntity);
+    }
+
+    @PostMapping("/users/{id}/assignments")
+    public ResponseEntity addAssignment(@PathVariable Long id,
+                                    @RequestBody Assignment assignment) {
+        ResponseEntity responseEntity = userService.addAssignment(id, assignment);
+
+        return ResponseEntity.ok(responseEntity);
+    }
+
+    @PostMapping("/users/{id}/announcements")
+    public ResponseEntity addAnnouncement(@PathVariable Long id,
+                                        @RequestBody Announcement announcement) {
+        ResponseEntity responseEntity = userService.addAnnouncement(id, announcement);
+
+        return ResponseEntity.ok(responseEntity);
+    }
+
 }

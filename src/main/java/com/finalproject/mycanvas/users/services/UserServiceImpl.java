@@ -131,6 +131,20 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public ResponseEntity addCourse(Long userId, Course course) {
+        UserEntity userEntity = userRepository.findById(userId).get();
+        List<CourseEntity> courseEntities = userEntity.getCourses();
+        CourseEntity courseEntity = new CourseEntity();
+        courseEntity.setId(course.getId());
+        courseEntity.setName(course.getName());
+        courseEntity.setTeacherId(course.getTeacherId());
+
+        courseEntities.add(courseEntity);
+        userRepository.save(userEntity);
+        return ResponseEntity.ok(courseEntities);
+    }
+
+    @Override
     public List<Assignment> getAssignment(Long userId) {
         UserEntity userEntity = userRepository.findById(userId).get();
         List<AssignmentEntity> assignmentEntities = userEntity.getAssignments();
@@ -146,6 +160,25 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public ResponseEntity addAssignment(Long userId, Assignment assignment) {
+        UserEntity userEntity = userRepository.findById(userId).get();
+        List<AssignmentEntity> assignmentEntities = userEntity.getAssignments();
+        AssignmentEntity assignmentEntity = new AssignmentEntity();
+        assignmentEntity.setId(assignment.getId());
+        assignmentEntity.setDescription(assignment.getDescription());
+        assignmentEntity.setDue_date(assignment.getDue_date());
+        assignmentEntity.setGrade(assignment.getGrade());
+        assignmentEntity.setTeacherId(assignment.getTeacherId());
+
+        assignmentEntities.add(assignmentEntity);
+
+        userRepository.save(userEntity);
+
+        return ResponseEntity.ok(assignmentEntities);
+    }
+
+
+    @Override
     public List<Announcement> getAnnouncement(Long userId) {
         UserEntity userEntity = userRepository.findById(userId).get();
         List<AnnouncementEntity> announcementEntities = userEntity.getAnnouncementEntities();
@@ -157,5 +190,21 @@ public class UserServiceImpl implements UserService{
                 .collect(Collectors.toList());
         return announcements;
     }
+
+    @Override
+    public ResponseEntity addAnnouncement(Long userId, Announcement announcement) {
+        UserEntity userEntity = userRepository.findById(userId).get();
+        List<AnnouncementEntity> announcementEntities = userEntity.getAnnouncementEntities();
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        announcementEntity.setId(announcement.getId());
+        announcementEntity.setContent(announcement.getContent());
+        announcementEntity.setTeacherId(announcement.getTeacherId());
+        announcementEntities.add(announcementEntity);
+
+        userRepository.save(userEntity);
+
+        return ResponseEntity.ok(announcementEntities);
+    }
+
 
 }

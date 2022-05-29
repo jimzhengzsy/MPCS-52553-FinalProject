@@ -24,9 +24,14 @@ public interface UserService {
 
     List<Course> getCourses(Long userId);
 
+    ResponseEntity addCourse(Long userId, Course course);
     List<Assignment> getAssignment(Long userId);
 
+    ResponseEntity addAssignment(Long userId, Assignment assignment);
+
     List<Announcement> getAnnouncement(Long userId);
+
+    ResponseEntity addAnnouncement(Long userId, Announcement announcement);
 
 //    Course addUserWithCourse(Long userId, Long courseId);
 }

@@ -27,7 +27,9 @@ public class UserEntity {
     private String loginQuestion2;
     private String loginQuestion3;
 
-    @ManyToMany
+    @ManyToMany(
+            cascade = CascadeType.ALL
+    )
     @JoinTable(
             name = "user_assignment_map",
             joinColumns = @JoinColumn(
@@ -42,7 +44,9 @@ public class UserEntity {
     )
     private List<AssignmentEntity> assignments;
 
-    @ManyToMany
+    @ManyToMany(
+            cascade = CascadeType.ALL
+    )
     @JoinTable(
             name = "user_announcement_map",
             joinColumns = @JoinColumn(
@@ -57,7 +61,9 @@ public class UserEntity {
     )
     private List<AnnouncementEntity> announcementEntities;
 
-    @ManyToMany
+    @ManyToMany(
+            cascade = CascadeType.ALL
+    )
     @JoinTable(
             name = "enrollment",
             joinColumns = @JoinColumn(
