@@ -1,0 +1,44 @@
+Login:
+    send                receive
+
+    email, passwords
+                        if success, json = {success: bool, id : str or int, role : int or str,
+                                            courses: list of json, assignments: list of json}
+                                            这里需要courses 是因为它是我的navigation bar的一部分
+                                            这里需要assignments 是因为题目要求login 成功之后默认是dashboard page
+                                            dashboard显示所有的assignments
+
+                        else json = {success: bool}
+
+
+Forget Password:
+
+    send                receive
+
+    email
+                        if exists, json = {exists: bool, questions: list of str}
+
+                        else json = {exists: bool}
+
+
+    answers
+                        if all corrects, json = {correct: bool}
+
+                        else json = {correct: bool}
+
+
+    new pass
+                        json = {change successfully}
+
+
+
+SignUp:
+
+
+    send                receive
+
+    all information
+                        json = {sign up successfully}
+
+
+
