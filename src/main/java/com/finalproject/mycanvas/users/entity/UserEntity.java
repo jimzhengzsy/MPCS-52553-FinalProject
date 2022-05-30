@@ -17,6 +17,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long id;
+    private long userId;
     private String firstName;
     private String lastName;
     private String email;
@@ -26,6 +27,9 @@ public class UserEntity {
     private String loginQuestion1;
     private String loginQuestion2;
     private String loginQuestion3;
+    private String loginAnswer1;
+    private String loginAnswer2;
+    private String loginAnswer3;
 
     @ManyToMany(
             cascade = CascadeType.ALL

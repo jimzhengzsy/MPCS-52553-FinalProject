@@ -16,9 +16,14 @@ public interface UserService {
 
     User getUserById(Long id);
 
+    User getUserByEmail(String email);
     User updateUser(Long id, User user);
 
     ResponseEntity LoginUser(String email, String password);
+
+    ResponseEntity checkEmail(String email);
+
+    ResponseEntity checkLoginAnswers(String[] answers, Long id);
 
     UserInfo getInfoById(Long id);
 

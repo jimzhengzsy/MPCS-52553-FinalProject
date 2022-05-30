@@ -1,9 +1,11 @@
 package com.finalproject.mycanvas.assignments.entity;
 
+import com.finalproject.mycanvas.users.entity.UserEntity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,6 +17,12 @@ public class AssignmentEntity {
     private long id;
     private long grade;
     private long teacherId;
-    private Date due_date;
+    private String assignmentName;
+    private Timestamp due_date;
     private String description;
+
+    @ManyToMany(
+            mappedBy = "assignments",
+            cascade = CascadeType.ALL)
+    private List<UserEntity> userEntities;
 }

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -14,6 +14,7 @@ public class Assignment {
     private long id;
     private long grade;
     private long teacherId;
-    private Date due_date;
+    private String assignmentName;
+    private Timestamp due_date;
     private String description;
 }

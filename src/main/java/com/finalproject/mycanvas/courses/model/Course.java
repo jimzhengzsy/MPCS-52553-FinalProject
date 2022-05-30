@@ -11,4 +11,6 @@ public class Course {
     private long id;
     private String name;
     private long teacherId;
+    private String description;
+    private String capacity;
 }

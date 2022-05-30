@@ -1,8 +1,14 @@
 package com.finalproject.mycanvas.courses.services;
 
+import com.finalproject.mycanvas.announcement.entity.AnnouncementEntity;
+import com.finalproject.mycanvas.announcement.model.Announcement;
+import com.finalproject.mycanvas.assignments.entity.AssignmentEntity;
+import com.finalproject.mycanvas.assignments.model.Assignment;
 import com.finalproject.mycanvas.courses.entity.CourseEntity;
 import com.finalproject.mycanvas.courses.model.Course;
 import com.finalproject.mycanvas.courses.repository.CourseRepository;
+import com.finalproject.mycanvas.users.entity.UserEntity;
+import com.finalproject.mycanvas.users.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,7 +44,9 @@ public class CourseServiceImpl implements CourseService{
                 .stream()
                 .map(course -> new Course(course.getId(),
                         course.getName(),
-                        course.getTeacherId()))
+                        course.getTeacherId(),
+                        course.getDescription(),
+                        course.getCapacity()))
                 .collect(Collectors.toList());
         return courses;
     }
@@ -54,5 +62,94 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public Course updateCourse(Long id, Course course) {
         return null;
+    }
+
+    @Override
+    public ResponseEntity addUserToCourse(Long courseId, User user) {
+        CourseEntity courseEntity = courseRepository.findById(courseId).get();
+        List<UserEntity> userEntities = courseEntity.getUserEntities();
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setRole(user.getRole());
+        userEntity.setEmail(user.getEmail());
+        userEntity.setLastName(user.getLastName());
+        userEntity.setFirstName(user.getFirstName());
+        userEntity.setStatus(user.getStatus());
+        userEntity.setPassword(user.getPassword());
+        userEntity.setLoginQuestion1(user.getLoginQuestion1());
+        userEntity.setLoginQuestion2(user.getLoginQuestion2());
+        userEntity.setLoginQuestion3(user.getLoginQuestion3());
+
+        userEntities.add(userEntity);
+
+        courseRepository.save(courseEntity);
+
+        return ResponseEntity.ok(userEntities);
+    }
+
+    @Override
+    public ResponseEntity addAssignmentToCourse(Long courseId, Assignment assignment) {
+        CourseEntity courseEntity = courseRepository.findById(courseId).get();
+        List<AssignmentEntity> assignmentEntities = courseEntity.getAssigmentEntities();
+
+        AssignmentEntity assignmentEntity = new AssignmentEntity();
+        BeanUtils.copyProperties(assignment,assignmentEntity);
+        assignmentEntities.add(assignmentEntity);
+        courseRepository.save(courseEntity);
+
+        return ResponseEntity.ok(assignmentEntities);
+    }
+
+    @Override
+    public List<User> getUsers(Long id) {
+        CourseEntity courseEntity = courseRepository.findById(id).get();
+        List<UserEntity> userEntities = courseEntity.getUserEntities();
+        List<User> users = userEntities
+                .stream()
+                .map(user -> new User(user.getId(),
+                        user.getUserId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getStatus(),
+                        user.getPassword(),
+                        user.getLoginQuestion1(),
+                        user.getLoginQuestion2(),
+                        user.getLoginQuestion3(),
+                        user.getLoginAnswer1(),
+                        user.getLoginAnswer2(),
+                        user.getLoginAnswer3()))
+                .collect(Collectors.toList());
+        return users;
+    }
+
+    @Override
+    public List<Announcement> getAnnouncementsByCourseId(Long courseId) {
+        CourseEntity courseEntity = courseRepository.findById(courseId).get();
+        List<AnnouncementEntity> announcementEntities = courseEntity.getAnnouncementEntities();
+        List<Announcement> announcements = announcementEntities
+                .stream()
+                .map(announcement -> new Announcement(announcement.getId(),
+                        announcement.getTeacherId(),
+                        announcement.getContent()))
+                .collect(Collectors.toList());
+        return announcements;
+    }
+
+    @Override
+    public List<Assignment> getAssignmentsByCourseId(Long courseId) {
+        CourseEntity courseEntity = courseRepository.findById(courseId).get();
+        List<AssignmentEntity> assignmentEntities = courseEntity.getAssigmentEntities();
+        List<Assignment> assignments = assignmentEntities
+                .stream()
+                .map(assignment -> new Assignment(assignment.getId(),
+                        assignment.getGrade(),
+                        assignment.getTeacherId(),
+                        assignment.getAssignmentName(),
+                        assignment.getDue_date(),
+                        assignment.getDescription()))
+                .collect(Collectors.toList());
+        return assignments;
     }
 }

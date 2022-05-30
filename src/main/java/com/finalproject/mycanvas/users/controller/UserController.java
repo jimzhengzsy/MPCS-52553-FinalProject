@@ -39,6 +39,14 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/users/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        User user = null;
+        user = userService.getUserByEmail(email);
+
+        return ResponseEntity.ok(user);
+    }
+
     @PutMapping("/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id,
                                            @RequestBody User user) {
@@ -50,6 +58,20 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity loginUser(@RequestBody String email, String password) {
         ResponseEntity responseEntity = userService.LoginUser(email, password);
+
+        return responseEntity;
+    }
+
+    @PostMapping("/checkEmail")
+    public ResponseEntity checkEmail(@RequestBody String email) {
+        ResponseEntity responseEntity = userService.checkEmail(email);
+
+        return responseEntity;
+    }
+
+    @PostMapping("/checkAnswers")
+    public ResponseEntity checkEmail(@RequestBody String[] answers, Long id) {
+        ResponseEntity responseEntity = userService.checkLoginAnswers(answers, id);
 
         return responseEntity;
     }
@@ -87,7 +109,7 @@ public class UserController {
                                     @RequestBody Course course) {
         ResponseEntity responseEntity = userService.addCourse(id, course);
 
-        return ResponseEntity.ok(responseEntity);
+        return ResponseEntity.ok(201);
     }
 
     @PostMapping("/users/{id}/assignments")
@@ -95,7 +117,7 @@ public class UserController {
                                     @RequestBody Assignment assignment) {
         ResponseEntity responseEntity = userService.addAssignment(id, assignment);
 
-        return ResponseEntity.ok(responseEntity);
+        return ResponseEntity.ok(201);
     }
 
     @PostMapping("/users/{id}/announcements")
@@ -103,7 +125,7 @@ public class UserController {
                                         @RequestBody Announcement announcement) {
         ResponseEntity responseEntity = userService.addAnnouncement(id, announcement);
 
-        return ResponseEntity.ok(responseEntity);
+        return ResponseEntity.ok(201);
     }
 
 }

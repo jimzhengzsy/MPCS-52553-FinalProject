@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService{
         List<User> users = userEntities
                 .stream()
                 .map(user -> new User(user.getId(),
+                        user.getUserId(),
                         user.getFirstName(),
                         user.getLastName(),
                         user.getEmail(),
@@ -54,7 +55,10 @@ public class UserServiceImpl implements UserService{
                         user.getPassword(),
                         user.getLoginQuestion1(),
                         user.getLoginQuestion2(),
-                        user.getLoginQuestion3()))
+                        user.getLoginQuestion3(),
+                        user.getLoginAnswer1(),
+                        user.getLoginAnswer2(),
+                        user.getLoginAnswer3()))
                 .collect(Collectors.toList());
         return users;
     }
@@ -62,6 +66,14 @@ public class UserServiceImpl implements UserService{
     @Override
     public User getUserById(Long id) {
         UserEntity userEntity = userRepository.findById(id).get();
+        User user = new User();
+        BeanUtils.copyProperties(userEntity,user);
+        return user;
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
         User user = new User();
         BeanUtils.copyProperties(userEntity,user);
         return user;
@@ -94,10 +106,46 @@ public class UserServiceImpl implements UserService{
 
         String correctPassword = userEntity.getPassword();
         if (correctPassword.equals(password)) {
-            return (ResponseEntity) ResponseEntity.status(200);
+            User user = new User();
+            BeanUtils.copyProperties(userEntity,user);
+            return (ResponseEntity) ResponseEntity.ok(user);
         }
 
         return (ResponseEntity) ResponseEntity.status(401);
+    }
+
+    @Override
+    public ResponseEntity checkEmail(String email) {
+        List<UserEntity> userEntities = userRepository.findAll();
+        for (UserEntity userEntity: userEntities) {
+            if (userEntity.getEmail().equals(email)) {
+                User user = new User();
+                BeanUtils.copyProperties(userEntity,user);
+                return ResponseEntity.ok(user);
+            }
+        }
+
+        return (ResponseEntity) ResponseEntity.status(404);
+    }
+
+    @Override
+    public ResponseEntity checkLoginAnswers(String[] answers, Long id) {
+        UserEntity userEntity = userRepository.findById(id).get();
+        String answer1 = userEntity.getLoginAnswer1();
+        String answer2 = userEntity.getLoginAnswer2();
+        String answer3 = userEntity.getLoginAnswer3();
+        String[] correctAnswers = new String[3];
+        correctAnswers[0] = answer1;
+        correctAnswers[1] = answer2;
+        correctAnswers[2] = answer3;
+
+        for (int i = 0; i < answers.length; i++) {
+            if (!answers[i].equals(correctAnswers[i])) {
+                return (ResponseEntity)ResponseEntity.status(400);
+            }
+        }
+
+        return ResponseEntity.ok(200);
     }
 
     @Override
@@ -123,7 +171,9 @@ public class UserServiceImpl implements UserService{
                 .stream()
                 .map(course -> new Course(course.getId(),
                         course.getName(),
-                        course.getTeacherId()))
+                        course.getTeacherId(),
+                        course.getDescription(),
+                        course.getCapacity()))
                 .collect(Collectors.toList());
 
         return courses;
@@ -153,6 +203,7 @@ public class UserServiceImpl implements UserService{
                 .map(assignment -> new Assignment(assignment.getId(),
                         assignment.getGrade(),
                         assignment.getTeacherId(),
+                        assignment.getAssignmentName(),
                         assignment.getDue_date(),
                         assignment.getDescription()))
                 .collect(Collectors.toList());
