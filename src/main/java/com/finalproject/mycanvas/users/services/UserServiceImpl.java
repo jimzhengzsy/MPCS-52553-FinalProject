@@ -12,6 +12,7 @@ import com.finalproject.mycanvas.users.model.User;
 import com.finalproject.mycanvas.users.model.UserInfo;
 import com.finalproject.mycanvas.users.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -101,17 +102,17 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity LoginUser(String email, String password) {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
-            return (ResponseEntity) ResponseEntity.status(401);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found user");
         }
 
         String correctPassword = userEntity.getPassword();
         if (correctPassword.equals(password)) {
             User user = new User();
             BeanUtils.copyProperties(userEntity,user);
-            return (ResponseEntity) ResponseEntity.ok(user);
+            return ResponseEntity.ok(user);
         }
 
-        return (ResponseEntity) ResponseEntity.status(401);
+        return ResponseEntity.status(401).body("login failed");
     }
 
     @Override
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService{
             }
         }
 
-        return (ResponseEntity) ResponseEntity.status(404);
+        return ResponseEntity.status(404).body("Email not found");
     }
 
     @Override
@@ -141,7 +142,7 @@ public class UserServiceImpl implements UserService{
 
         for (int i = 0; i < answers.length; i++) {
             if (!answers[i].equals(correctAnswers[i])) {
-                return (ResponseEntity)ResponseEntity.status(400);
+                return ResponseEntity.status(400).body("Answers not correct");
             }
         }
 
