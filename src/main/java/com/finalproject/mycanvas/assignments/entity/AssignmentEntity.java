@@ -17,6 +17,7 @@ public class AssignmentEntity {
     private long id;
     private long grade;
     private long teacherId;
+    private long courseId;
     private String assignmentName;
     private Timestamp due_date;
     private String description;

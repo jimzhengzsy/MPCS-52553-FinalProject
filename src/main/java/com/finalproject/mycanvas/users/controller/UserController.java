@@ -3,6 +3,8 @@ package com.finalproject.mycanvas.users.controller;
 import com.finalproject.mycanvas.announcement.model.Announcement;
 import com.finalproject.mycanvas.assignments.model.Assignment;
 import com.finalproject.mycanvas.courses.model.Course;
+import com.finalproject.mycanvas.users.entity.CheckAnswersRequestbody;
+import com.finalproject.mycanvas.users.entity.LoginData;
 import com.finalproject.mycanvas.users.model.User;
 import com.finalproject.mycanvas.users.model.UserInfo;
 import com.finalproject.mycanvas.users.services.UserService;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/api/")
 public class UserController {
@@ -56,8 +59,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity loginUser(@RequestBody String email, String password) {
-        ResponseEntity responseEntity = userService.LoginUser(email, password);
+    public ResponseEntity loginUser(@RequestBody LoginData loginData) {
+        ResponseEntity responseEntity = userService.LoginUser(loginData.getEmail(),loginData.getPassword());
 
         return responseEntity;
     }
@@ -70,7 +73,13 @@ public class UserController {
     }
 
     @PostMapping("/checkAnswers")
-    public ResponseEntity checkEmail(@RequestBody String[] answers, Long id) {
+    public ResponseEntity checkEmail(@RequestBody CheckAnswersRequestbody checkAnswersRequestbody) {
+        Long id = checkAnswersRequestbody.getId();
+        String[] answers = new String[3];
+        answers[0] = checkAnswersRequestbody.getAnswers();
+        answers[1] = checkAnswersRequestbody.getAnswer2();
+        answers[2] = checkAnswersRequestbody.getAnswer3();
+
         ResponseEntity responseEntity = userService.checkLoginAnswers(answers, id);
 
         return responseEntity;

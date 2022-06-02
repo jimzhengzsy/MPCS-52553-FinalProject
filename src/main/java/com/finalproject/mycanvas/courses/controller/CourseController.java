@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/api/")
 public class CourseController {
@@ -56,6 +56,8 @@ public class CourseController {
         ResponseEntity responseEntity = courseService.addAssignmentToCourse(id, assignment);
         return ResponseEntity.ok(201);
     }
+
+
 
     @PutMapping("/courses/{id}")
     public ResponseEntity updateCourse(@PathVariable Long id,

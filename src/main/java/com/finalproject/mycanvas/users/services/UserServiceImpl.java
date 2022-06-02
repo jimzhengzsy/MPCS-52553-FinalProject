@@ -100,13 +100,23 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity LoginUser(String email, String password) {
-        UserEntity userEntity = userRepository.findByEmail(email);
+        List<UserEntity> userEntities = userRepository.findAll();
+        UserEntity userEntity = new UserEntity();
+
+        for (UserEntity userEntity1: userEntities) {
+            if (userEntity1.getEmail().equals(email)) {
+                BeanUtils.copyProperties(userEntity1,userEntity);
+            }
+        }
+
+
+
         if (userEntity == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found user");
         }
 
         String correctPassword = userEntity.getPassword();
-        if (correctPassword.equals(password)) {
+        if (correctPassword != null && correctPassword.equals(password)) {
             User user = new User();
             BeanUtils.copyProperties(userEntity,user);
             return ResponseEntity.ok(user);
@@ -204,6 +214,7 @@ public class UserServiceImpl implements UserService{
                 .map(assignment -> new Assignment(assignment.getId(),
                         assignment.getGrade(),
                         assignment.getTeacherId(),
+                        assignment.getCourseId(),
                         assignment.getAssignmentName(),
                         assignment.getDue_date(),
                         assignment.getDescription()))
@@ -238,6 +249,7 @@ public class UserServiceImpl implements UserService{
                 .stream()
                 .map(announcement -> new Announcement(announcement.getId(),
                         announcement.getTeacherId(),
+                        announcement.getCourseId(),
                         announcement.getContent()))
                 .collect(Collectors.toList());
         return announcements;

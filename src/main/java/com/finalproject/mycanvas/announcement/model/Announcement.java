@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class Announcement {
     private long id;
     private long teacherId;
+    private long courseId;
     private String content;
 }

@@ -132,6 +132,7 @@ public class CourseServiceImpl implements CourseService{
                 .stream()
                 .map(announcement -> new Announcement(announcement.getId(),
                         announcement.getTeacherId(),
+                        announcement.getCourseId(),
                         announcement.getContent()))
                 .collect(Collectors.toList());
         return announcements;
@@ -146,6 +147,7 @@ public class CourseServiceImpl implements CourseService{
                 .map(assignment -> new Assignment(assignment.getId(),
                         assignment.getGrade(),
                         assignment.getTeacherId(),
+                        assignment.getCourseId(),
                         assignment.getAssignmentName(),
                         assignment.getDue_date(),
                         assignment.getDescription()))

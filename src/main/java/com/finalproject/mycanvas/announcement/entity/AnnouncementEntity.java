@@ -16,6 +16,7 @@ public class AnnouncementEntity {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long id;
     private long teacherId;
+    private long courseId;
     private String content;
 
     @ManyToMany(
