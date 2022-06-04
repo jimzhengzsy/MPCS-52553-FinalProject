@@ -22,7 +22,11 @@ public interface CourseService {
 
     ResponseEntity addAssignmentToCourse(Long courseId, Assignment assignment);
 
+    ResponseEntity addAnnouncementToCourse(Long courseId, Announcement announcement);
+
     List<User> getUsers(Long id);
+
+    List<Object> getCourseAssignmentData(Long id);
 
     List<Announcement> getAnnouncementsByCourseId(Long courseId);
 

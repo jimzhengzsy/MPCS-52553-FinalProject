@@ -50,10 +50,25 @@ public class CourseController {
         List<Assignment> assignments = courseService.getAssignmentsByCourseId(id);
         return ResponseEntity.ok(assignments);
     }
+
+    @GetMapping("/courses/{id}/assignments-data")
+    public ResponseEntity getCourseAssignmentData(@PathVariable Long id) {
+
+        List<Object> data = courseService.getCourseAssignmentData(id);
+        return ResponseEntity.ok(data);
+    }
+
     @PostMapping("/courses/{id}/assignments")
     public ResponseEntity addAssignmentToCourse(@PathVariable Long id,
                                                 @RequestBody Assignment assignment) {
         ResponseEntity responseEntity = courseService.addAssignmentToCourse(id, assignment);
+        return ResponseEntity.ok(201);
+    }
+
+    @PostMapping("/courses/{id}/announcements")
+    public ResponseEntity addAnnouncementToCourse(@PathVariable Long id,
+                                                @RequestBody Announcement announcement) {
+        ResponseEntity responseEntity = courseService.addAnnouncementToCourse(id, announcement);
         return ResponseEntity.ok(201);
     }
 

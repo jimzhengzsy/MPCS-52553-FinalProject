@@ -6,6 +6,8 @@ import com.finalproject.mycanvas.assignments.entity.AssignmentEntity;
 import com.finalproject.mycanvas.assignments.model.Assignment;
 import com.finalproject.mycanvas.courses.entity.CourseEntity;
 import com.finalproject.mycanvas.courses.model.Course;
+import com.finalproject.mycanvas.users.entity.CheckAnswersRequestbody;
+import com.finalproject.mycanvas.users.entity.NamePair;
 import com.finalproject.mycanvas.users.entity.UserEntity;
 import com.finalproject.mycanvas.users.entity.UserInfoEntity;
 import com.finalproject.mycanvas.users.model.User;
@@ -47,9 +49,9 @@ public class UserServiceImpl implements UserService{
         List<User> users = userEntities
                 .stream()
                 .map(user -> new User(user.getId(),
-                        user.getUserId(),
                         user.getFirstName(),
                         user.getLastName(),
+                        user.getUserId(),
                         user.getEmail(),
                         user.getRole(),
                         user.getStatus(),
@@ -78,6 +80,80 @@ public class UserServiceImpl implements UserService{
         User user = new User();
         BeanUtils.copyProperties(userEntity,user);
         return user;
+    }
+
+    @Override
+    public List<User> getUserByFirstName(String firstName) {
+        List<UserEntity> userEntities = userRepository.getUserByFirstName(firstName);
+        List<User> users = userEntities
+                .stream()
+                .map(user -> new User(user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getUserId(),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getStatus(),
+                        user.getPassword(),
+                        user.getLoginQuestion1(),
+                        user.getLoginQuestion2(),
+                        user.getLoginQuestion3(),
+                        user.getLoginAnswer1(),
+                        user.getLoginAnswer2(),
+                        user.getLoginAnswer3()))
+                .collect(Collectors.toList());
+        return users;
+    }
+
+    @Override
+    public List<User> getUserByLastName(String lastName) {
+        List<UserEntity> userEntities = userRepository.getUserByLastName(lastName);
+        List<User> users = userEntities
+                .stream()
+                .map(user -> new User(user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getUserId(),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getStatus(),
+                        user.getPassword(),
+                        user.getLoginQuestion1(),
+                        user.getLoginQuestion2(),
+                        user.getLoginQuestion3(),
+                        user.getLoginAnswer1(),
+                        user.getLoginAnswer2(),
+                        user.getLoginAnswer3()))
+                .collect(Collectors.toList());
+        return users;
+    }
+
+    @Override
+    public List<User> getTeachers() {
+        List<UserEntity> userEntities = userRepository.getTeachers();
+        List<User> users = userEntities
+                .stream()
+                .map(user -> new User(user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getUserId(),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getStatus(),
+                        user.getPassword(),
+                        user.getLoginQuestion1(),
+                        user.getLoginQuestion2(),
+                        user.getLoginQuestion3(),
+                        user.getLoginAnswer1(),
+                        user.getLoginAnswer2(),
+                        user.getLoginAnswer3()))
+                .collect(Collectors.toList());
+        return users;
+    }
+
+    @Override
+    public NamePair getNamePairByEmail(String email) {
+        return getNamePairByEmail(email);
     }
 
     @Override
@@ -127,16 +203,14 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity checkEmail(String email) {
-        List<UserEntity> userEntities = userRepository.findAll();
-        for (UserEntity userEntity: userEntities) {
-            if (userEntity.getEmail().equals(email)) {
-                User user = new User();
-                BeanUtils.copyProperties(userEntity,user);
-                return ResponseEntity.ok(user);
-            }
+        User user = getUserByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.status(404).body("Email not found");
         }
 
-        return ResponseEntity.status(404).body("Email not found");
+        return ResponseEntity.ok(user);
+
     }
 
     @Override
@@ -192,6 +266,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public List<Object> getStudentAssignmentData(Long userId, Long courseId) {
+        return userRepository.getStudentAssignmentData( userId, courseId);
+    }
+
+    @Override
     public ResponseEntity addCourse(Long userId, Course course) {
         UserEntity userEntity = userRepository.findById(userId).get();
         List<CourseEntity> courseEntities = userEntity.getCourses();
@@ -212,12 +291,14 @@ public class UserServiceImpl implements UserService{
         List<Assignment> assignments = assignmentEntities
                 .stream()
                 .map(assignment -> new Assignment(assignment.getId(),
+                        assignment.getPoint(),
                         assignment.getGrade(),
                         assignment.getTeacherId(),
                         assignment.getCourseId(),
                         assignment.getAssignmentName(),
                         assignment.getDue_date(),
-                        assignment.getDescription()))
+                        assignment.getDescription(),
+                        assignment.getAnswer()))
                 .collect(Collectors.toList());
         return assignments;
     }

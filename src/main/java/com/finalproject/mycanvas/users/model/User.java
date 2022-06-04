@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class User {
     private long id;
-    private long userId;
     private String firstName;
     private String lastName;
+    private String userId;
     private String email;
     private String role;
     private String status;

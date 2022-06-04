@@ -10,6 +10,7 @@ import com.finalproject.mycanvas.courses.repository.CourseRepository;
 import com.finalproject.mycanvas.users.entity.UserEntity;
 import com.finalproject.mycanvas.users.model.User;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -101,15 +102,28 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
+    public ResponseEntity addAnnouncementToCourse(Long courseId, Announcement announcement) {
+        CourseEntity courseEntity = courseRepository.findById(courseId).get();
+        List<AnnouncementEntity> announcementEntities = courseEntity.getAnnouncementEntities();
+
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        BeanUtils.copyProperties(announcement,announcementEntity);
+        announcementEntities.add(announcementEntity);
+        courseRepository.save(courseEntity);
+
+        return ResponseEntity.status(201).body("Add anouncement to course");
+    }
+
+    @Override
     public List<User> getUsers(Long id) {
         CourseEntity courseEntity = courseRepository.findById(id).get();
         List<UserEntity> userEntities = courseEntity.getUserEntities();
         List<User> users = userEntities
                 .stream()
                 .map(user -> new User(user.getId(),
-                        user.getUserId(),
                         user.getFirstName(),
                         user.getLastName(),
+                        user.getUserId(),
                         user.getEmail(),
                         user.getRole(),
                         user.getStatus(),
@@ -122,6 +136,11 @@ public class CourseServiceImpl implements CourseService{
                         user.getLoginAnswer3()))
                 .collect(Collectors.toList());
         return users;
+    }
+
+    @Override
+    public List<Object> getCourseAssignmentData(Long id) {
+        return courseRepository.getCourseAssignmentData(id);
     }
 
     @Override
@@ -145,12 +164,14 @@ public class CourseServiceImpl implements CourseService{
         List<Assignment> assignments = assignmentEntities
                 .stream()
                 .map(assignment -> new Assignment(assignment.getId(),
+                        assignment.getPoint(),
                         assignment.getGrade(),
                         assignment.getTeacherId(),
                         assignment.getCourseId(),
                         assignment.getAssignmentName(),
                         assignment.getDue_date(),
-                        assignment.getDescription()))
+                        assignment.getDescription(),
+                        assignment.getAnswer()))
                 .collect(Collectors.toList());
         return assignments;
     }

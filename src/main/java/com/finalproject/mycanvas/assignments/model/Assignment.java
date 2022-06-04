@@ -12,10 +12,12 @@ import java.sql.Timestamp;
 public class Assignment {
 
     private long id;
+    private long point;
     private long grade;
     private long teacherId;
     private long courseId;
     private String assignmentName;
     private Timestamp due_date;
     private String description;
+    private String answer;
 }
